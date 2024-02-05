@@ -6,9 +6,9 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private var noButtonOutlet: UIButton!
     @IBOutlet private var yesButtonOutlet: UIButton!
     @IBOutlet private var textLabel: UILabel!
-    @IBOutlet private var ImageView: UIImageView!
+    @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
-    @IBOutlet private var QuestionLabel: UILabel!
+    @IBOutlet private var questionLabel: UILabel!
     
     private let questions: [QuizQuestion] = [
         QuizQuestion(image: "The Godfather", text: "Рейтинг этого фильма больше чем 6?", correctAnswer: true),
@@ -26,7 +26,7 @@ final class MovieQuizViewController: UIViewController {
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
-
+    
     private struct QuizQuestion {
         let image: String
         let text: String
@@ -34,27 +34,29 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private struct QuizResultsViewModel {
-      let title: String
-      let text: String
-      let buttonText: String
+        let title: String
+        let text: String
+        let buttonText: String
     }
     
     // вью модель для состояния "Вопрос показан"
     private struct QuizStepViewModel {
-      let image: UIImage
-      let question: String
-      let questionNumber: String
+        let image: UIImage
+        let question: String
+        let questionNumber: String
     }
     
-//    кнопка нет
+    //    кнопка нет
     @IBAction private func noButtonClicked(_ sender: Any) {
+        noButtonOutlet.isEnabled = false
         let answer = false
         let check = questions[currentQuestionIndex]
-    
+        
         showAnswerResult(isCorrect: answer == check.correctAnswer)
     }
-//    кнопка да
+    //    кнопка да
     @IBAction private func yesButtonClicked(_ sender: Any) {
+        yesButtonOutlet.isEnabled = false
         let answer = true
         let check = questions[currentQuestionIndex]
         
@@ -70,7 +72,7 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func show(quiz step: QuizStepViewModel) {
-        ImageView.image = step.image
+        imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
     }
@@ -80,17 +82,19 @@ final class MovieQuizViewController: UIViewController {
             correctAnswers += 1
         }
         
-        ImageView.layer.masksToBounds = true
-        ImageView.layer.borderWidth = 8
-        ImageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 8
+        imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.ImageView.layer.borderWidth = 0
+            self.imageView.layer.borderWidth = 0
             self.showNextQuestionOrResults()
             
         }
     }
     
     private func showNextQuestionOrResults() {
+        yesButtonOutlet.isEnabled = true
+        noButtonOutlet.isEnabled = true
         if currentQuestionIndex == questions.count - 1 {
             let text = "Ваш результат: \(correctAnswers)/10" // 1
             let viewModel = QuizResultsViewModel( // 2
@@ -127,21 +131,30 @@ final class MovieQuizViewController: UIViewController {
         self.present(alert, animated: true, completion: nil)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//      настройки шрифта
-        QuestionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
+    private func setupViews(){
+        questionLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         counterLabel.font = UIFont(name: "YSDisplay-Medium", size: 20)
         textLabel.font = UIFont(name: "YSDisplay-Bold", size: 23)
         noButtonOutlet.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
         yesButtonOutlet.titleLabel?.font = UIFont(name: "YSDisplay-Medium", size: 20)
+        
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+            return .lightContent
+        }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        //      настройки шрифта
+        setupViews()
         let currentQuestion = questions[currentQuestionIndex]
         let viewModel = convert(model: currentQuestion)
         show(quiz: viewModel)
     }
-
-}
     
+}
+
 
 
 
