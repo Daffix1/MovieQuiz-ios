@@ -141,8 +141,8 @@ final class MovieQuizViewController: UIViewController {
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
-            return .lightContent
-        }
+        return .lightContent
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
