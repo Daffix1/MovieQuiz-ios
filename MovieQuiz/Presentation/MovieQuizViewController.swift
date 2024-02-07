@@ -46,9 +46,21 @@ final class MovieQuizViewController: UIViewController {
         let questionNumber: String
     }
     
+    // отключаем кнопки
+    private func enabledButton(switchButton: Bool){
+        if switchButton{
+            noButtonOutlet.isEnabled = true
+            yesButtonOutlet.isEnabled = true
+        }else{
+            noButtonOutlet.isEnabled = false
+            yesButtonOutlet.isEnabled = false
+        }
+
+    }
+    
     //    кнопка нет
     @IBAction private func noButtonClicked(_ sender: Any) {
-        noButtonOutlet.isEnabled = false
+        enabledButton(switchButton: false)
         let answer = false
         let check = questions[currentQuestionIndex]
         
@@ -56,7 +68,7 @@ final class MovieQuizViewController: UIViewController {
     }
     //    кнопка да
     @IBAction private func yesButtonClicked(_ sender: Any) {
-        yesButtonOutlet.isEnabled = false
+        enabledButton(switchButton: false)
         let answer = true
         let check = questions[currentQuestionIndex]
         
@@ -93,8 +105,7 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func showNextQuestionOrResults() {
-        yesButtonOutlet.isEnabled = true
-        noButtonOutlet.isEnabled = true
+        enabledButton(switchButton: true)
         if currentQuestionIndex == questions.count - 1 {
             let text = "Ваш результат: \(correctAnswers)/10" // 1
             let viewModel = QuizResultsViewModel( // 2
