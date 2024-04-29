@@ -18,12 +18,12 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
-    private let questionsAmount: Int = 10
+    private let questionsAmount: Int = 3
     
 //    Mark -- Делегаты и взаимодействия между классами --
     private var questionFactory: QuestionFactoryProtocol?
-    private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenterProtocol?
+    private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService?
     
     
@@ -31,10 +31,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        questionFactory = QuestionFactory(delegate: self)
-        statisticService = StatisticServiceImplementation()
-        alertPresenter = AlertPresenter(viewController: self)
         setupBorder(isHidden: true)
+        
+        questionFactory = QuestionFactory(delegate: self)
+        alertPresenter = AlertPresenter(viewController: self)
+        statisticService = StatisticServiceImplementation()
         questionFactory?.requestNextQuestion()
     }
     
