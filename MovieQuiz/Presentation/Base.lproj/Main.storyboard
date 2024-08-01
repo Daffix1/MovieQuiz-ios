@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -103,10 +103,16 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="ugv-Lh-iK8">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" name="YP Background"/>
                         <constraints>
+                            <constraint firstItem="ugv-Lh-iK8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="100" id="5Oc-9Y-WUh"/>
+                            <constraint firstItem="ugv-Lh-iK8" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6Oh-Wk-bmm"/>
+                            <constraint firstItem="ugv-Lh-iK8" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="K1L-Xw-G6c"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="4cN-qU-cxw" secondAttribute="bottom" id="rDj-px-y0E"/>
                             <constraint firstItem="4cN-qU-cxw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="rND-ME-8NR"/>
                             <constraint firstItem="4cN-qU-cxw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="txn-ZE-jZ4"/>
@@ -116,6 +122,7 @@
                     <connections>
                         <outlet property="ImageView" destination="BML-Te-Z65" id="CGw-AG-nQe"/>
                         <outlet property="QuestionLabel" destination="l63-fL-elp" id="EOa-Fs-Pe2"/>
+                        <outlet property="activityIndicator" destination="ugv-Lh-iK8" id="qR9-cv-ujk"/>
                         <outlet property="counterLabel" destination="V7S-vF-fya" id="Lva-cW-AFy"/>
                         <outlet property="noButtonOutlet" destination="tA8-ah-Zto" id="gwX-IX-v4g"/>
                         <outlet property="textLabel" destination="jqU-cF-R7w" id="Uff-Ii-Vqk"/>
@@ -138,7 +145,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
