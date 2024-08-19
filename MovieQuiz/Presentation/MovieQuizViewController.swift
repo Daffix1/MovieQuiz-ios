@@ -2,8 +2,7 @@ import UIKit
 
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
-    
-    
+
 //    Mark -- Outlets --
 
     @IBOutlet private var noButtonOutlet: UIButton!
@@ -12,6 +11,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var questionLabel: UILabel!
+    @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     
     
 //    Mark -- Нужные значения --
@@ -22,8 +22,8 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
 //    Mark -- Делегаты и взаимодействия между классами --
     private var questionFactory: QuestionFactoryProtocol?
-    private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenterProtocol?
+    private var currentQuestion: QuizQuestion?
     private var statisticService: StatisticService?
     
     
@@ -31,11 +31,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-        questionFactory = QuestionFactory(delegate: self)
-        statisticService = StatisticServiceImplementation()
-        alertPresenter = AlertPresenter(viewController: self)
         setupBorder(isHidden: true)
-        questionFactory?.requestNextQuestion()
+        
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        alertPresenter = AlertPresenter(viewController: self)
+        statisticService = StatisticServiceImplementation()
+        
+        showLoadingIndicator()
+        questionFactory?.loadData()
     }
     
 //   Mark -- Actions --
@@ -89,6 +92,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     
     //   ------ метод считает правильные ответы и запускает новый вопрос ------
     private func showAnswerResult(isCorrect: Bool) {
+        enabledButton(switchButton: false)
         setupBorder(isHidden: false)
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         if isCorrect { correctAnswers += 1 }
@@ -116,10 +120,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     //   ------ метод конвертации из моковых данных в нужный формат для показа данных на экране ------
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         return QuizStepViewModel(
-            image: UIImage(named: model.image) ?? UIImage(),
+            image: UIImage(data: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsAmount)")
-    }
+    } 
     
     //   ------ метод который показывает вопрос на экран ------
     private func show(quiz step: QuizStepViewModel) {
@@ -177,7 +181,42 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .lightContent
     }
+    
+    private func showLoadingIndicator() {
+        activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
+        activityIndicator.startAnimating() // включаем анимацию
+    }
+    
+    private func hideLoadingIndicator() {
+        activityIndicator.isHidden = true // говорим, что индикатор загрузки скрыт
+    }
+    
+    private func showNetworkError(message: String) {
+        hideLoadingIndicator()
+        
+        alertPresenter?.showResult(with: AlertModel(title: "Сетевая ошибка", message: message, buttonText: "Попробовать заново") { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.currentQuestionIndex = 0
+            self.correctAnswers = 0
+            
+            self.questionFactory?.requestNextQuestion()
+        })
+    }
+    
+    
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
+        
+    }
+    
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true // скрываем индикатор загрузки
+        questionFactory?.requestNextQuestion()
+    }
+    
 }
+
 
 
 
