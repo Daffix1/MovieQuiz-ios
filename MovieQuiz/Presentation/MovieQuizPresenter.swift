@@ -123,6 +123,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
     
+    
     private func proceedToNextQuestionOrResults() {
         if self.isLastQuestion() {
             let text = correctAnswers == self.questionsAmount ?
